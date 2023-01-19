@@ -11,11 +11,7 @@
 			<a href="#" class="d-block">{{ $user->username }}</a>
 		</div>
 	</div>
-	<div class="user-panel mt-3 pb-3 mb-3 d-flex justify-content-between">
-		<div class="info">
-			<a href="/select-service" class="d-block">Servicio: {{ $user->service->name }}</a>
-		</div>
-	</div>
+
 	{{-- Sidebar Menu --}}
 	<nav class="mt-2">
 		<ul class="nav nav-pills nav-sidebar flex-column nav-legacy nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
@@ -29,7 +25,7 @@
 						@php
 							$isChildren = false;
 							foreach($item[2] as $route) {
-								$isChildren = Sidebar::actualRoute($route, $lastRoute[1]);
+								$isChildren = Sidebar::inRoute($route, $lastRoute[1]);
 
 								if($isChildren) break;
 							}
@@ -45,7 +41,7 @@
 							<ul class="nav nav-treeview">
 								@foreach ($item[2] as $subitem)								
 									<li class="nav-item">
-										<a href="{{ $subitem[1] }}" class="nav-link {{ Sidebar::actualRoute($subitem, $lastRoute[1]) ? 'active' : '' }}">
+										<a href="{{ $subitem[1] }}" class="nav-link {{ Sidebar::inRoute($subitem, $lastRoute[1]) ? 'active' : '' }}">
 											<i class="far fa-circle nav-icon"></i>
 											<p>{{ $subitem[0] }}</p>
 										</a>

@@ -12,7 +12,7 @@ class HomeController extends Controller
 	public function viewHome()
 	{
 		$userClass = new User($GLOBALS['auth']->getUserId());
-		$sidebar = \App\Sidebar::items($userClass);
+		$sidebar = \App\Sidebar::items();
 		$routes = [['Inicio', '/'], ['Pagina de Inicio', '/']];
 
 		return Blade::render('user_home', [

@@ -32,7 +32,7 @@
 								<td>{{ $item->username }}</td>
 								<td>{{ $item->email }}</td>
 								<td>
-									@foreach ($item->getRoles() as $role)
+									@foreach ($item->roles() as $role)
 										<span class="badge bg-{{ RolesDetails::info[ $role ][1] }}">{{ RolesDetails::info[ $role ][0] }}</span>
 									@endforeach
 								</td>

@@ -1,46 +1,62 @@
 <?php
+
 namespace App;
 
 use App\Model\User;
+use \Delight\Auth\Role;
 
 class Sidebar
 {
-	static function items(User $user)
+	static $SIDEBAR_ITEMS = array();
+
+	/*
+	* Register title to next items sidebar.
+	*/
+	static function registerTitle($title, $role)
 	{
-		$items = [['Inicio', 'fas fa-tachometer-alt', '/']];
+		if (!User::logged()->hasRole($role)) return;
 
-		if ($user->hasRole(\Delight\Auth\Role::ADMIN)) {
-			$items = array_merge($items, self::admin());
-		}
-
-		return $items;
+		array_push(Sidebar::$SIDEBAR_ITEMS, $title);
 	}
 
-	static function admin()
+	/*
+	* Register one item to sidebar.
+	*/
+	static function registerOne($name, $icon, $route, $role)
 	{
-		return [
-			'ADMIN',
-			['Administración', 'fas fa-cog', '/admin'],
-			[
-				'Usuarios',
-				'fas fa-users',
-				[
-					['Lista de usuarios', '/admin/view-users', true],
-					['Crear usuario', '/admin/create-user', true],
-					['Editar usuario', '/admin/edit-user', false],
-				],
-			],
-		];
+		if (!User::logged()->hasRole($role)) return;
+
+		array_push(Sidebar::$SIDEBAR_ITEMS, [$name, $icon, $route]);
 	}
 
-	static function actualRoute($route, $actualRoute)
+	/*
+	* Register section to sidebar.
+	*/
+	static function registerSection($name, $icon, $items, $role)
 	{
-		$routeUrl = $route[1];
-		$routeIsUnique = $route[2];
+		if (!User::logged()->hasRole($role)) return;
 
-		if ($routeIsUnique) {
-			return $routeUrl == $actualRoute;
+		array_push(Sidebar::$SIDEBAR_ITEMS, [$name, $icon, $items]);
+	}
+
+	/*
+	* Obtain all items of sidebar
+	*/
+	static function items()
+	{
+		return Sidebar::$SIDEBAR_ITEMS;
+	}
+
+	static function inRoute($route, $actual_route)
+	{
+		$isUnique = @$route[2];
+		if (is_null(@$route[2])) $isUnique = true;
+
+		$url = $route[1];
+
+		if ($isUnique) {
+			return $url == $actual_route;
 		}
-		return strpos($actualRoute, $routeUrl) !== false;
+		return strpos($actual_route, $url) !== false;
 	}
 }

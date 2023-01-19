@@ -1,13 +1,18 @@
 <?php
+
 namespace App\Model;
+
+use Delight\Auth\Role;
 
 class User
 {
 	public $id;
 	public $username;
 	public $email;
+	public $role;
 	public $created_at;
 	public $last_login;
+	public $exists;
 
 	public function __construct($userData /* User Id or User Data*/)
 	{
@@ -29,6 +34,14 @@ class User
 		$this->last_login = $userData['last_login'];
 	}
 
+	static function logged()
+	{
+		if ($GLOBALS['auth']->isLoggedIn()) {
+			return new self($GLOBALS['auth']->getUserId());
+		}
+		return false;
+	}
+
 	public function update()
 	{
 		$db = \MysqliDb::getInstance();
@@ -40,14 +53,18 @@ class User
 		]);
 	}
 
-	public function hasRole($role)
-	{
-		return $GLOBALS['auth']->admin()->doesUserHaveRole($this->id, $role);
-	}
-
-	public function getRoles()
+	public function roles()
 	{
 		return $GLOBALS['auth']->admin()->getRolesForUserById($this->id);
+	}
+
+	public function hasRole($role)
+	{
+		if ($role !== Role::ADMIN) {
+			// If this user is admin, have all roles
+			if ($this->hasRole(Role::ADMIN)) return true;
+		}
+		return $GLOBALS['auth']->admin()->doesUserHaveRole($this->id, $role);
 	}
 
 	public function updatePassword($newPassword)

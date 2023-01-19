@@ -474,7 +474,7 @@ composer.phar
 *.scss.map
 
 ##### Cache
-views/cache
+cache/
 node_modules/
 .env
 examples/
