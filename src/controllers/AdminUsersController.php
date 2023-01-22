@@ -2,7 +2,6 @@
 // Controllers/AdminUsersController.php
 namespace Controllers;
 
-use App\Helpers\Redirect;
 use App\RolesDetails;
 use Buki\Router\Http\Controller;
 use duncan3dc\Laravel\Blade;

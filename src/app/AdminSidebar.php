@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\Model\User;
-
 class AdminSidebar
 {
 	static $SIDEBAR_ITEMS = array();

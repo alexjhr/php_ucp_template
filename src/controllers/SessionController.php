@@ -5,7 +5,6 @@ namespace Controllers;
 use Buki\Router\Http\Controller;
 use duncan3dc\Laravel\Blade;
 use App\Helpers\Redirect;
-use App\Model\User;
 
 class SessionController extends Controller
 {

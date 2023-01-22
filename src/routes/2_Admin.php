@@ -8,7 +8,6 @@
 */
 
 use App\AdminSidebar;
-use Delight\Auth\Role;
 
 function admin_app_router($router)
 {
