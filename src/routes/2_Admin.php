@@ -23,7 +23,6 @@ function admin_app_router($router)
 	$router->post('/admin/edit-user', 'AdminUsersController@postEditMe', $adminMiddleware);
 	$router->post('/admin/edit-user/:id', 'AdminUsersController@postEditUser', $adminMiddleware);
 	$router->post('/admin/delete-user', 'AdminUsersController@postDeleteUser', $adminMiddleware);
-	$router->get('/admin/inspect-user/:id', 'AdminUsersController@inspectUser', $adminMiddleware);
 
 	// Register sidebar items
 	AdminSidebar::registerTitle('ADMIN');

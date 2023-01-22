@@ -43,9 +43,6 @@
 									<a href="/admin/edit-user/{{ $item->id }}" role="button" class="btn btn-sm btn-primary">
 										<i class="fas fa-edit"></i>
 									</a>
-									<a href="/admin/inspect-user/{{ $item->id }}" role="button" class="btn btn-sm btn-success">
-										<i class="fas fa-eye"></i>
-									</a>
 									<button type="button" class="btn btn-sm btn-danger" data-bs-viewUserId="{{ $item->id }}" data-bs-viewUser="delete">
 										<i class="fas fa-trash"></i>
 									</button>

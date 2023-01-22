@@ -231,32 +231,4 @@ class AdminUsersController extends Controller
 
 		return self::viewEditUser($userId);
 	}
-
-	public function inspectUser($userId)
-	{
-		// This admin can delete this user?
-		$adminId = $GLOBALS['auth']->getUserId();
-
-		$result = User::canModifyUser($adminId, $userId);
-		if (!$result) {
-			$GLOBALS['flash']->error('No puedes inspeccionar a este usuario');
-			return self::viewUserList($userId);
-		}
-
-		if ($adminId == $userId) {
-			$GLOBALS['flash']->error(
-				'¿Para qué te quieres inspeccionar a ti mismo?',
-			);
-			return self::viewUserList($userId);
-		}
-
-		try {
-			$GLOBALS['auth']->admin()->logInAsUserById($userId);
-
-			Redirect::to('/');
-		} catch (\Delight\Auth\UnknownIdException $e) {
-			$GLOBALS['flash']->error('Usuario no encontrado');
-		}
-		return self::viewUserList($userId);
-	}
 }
