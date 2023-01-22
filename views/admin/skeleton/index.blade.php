@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>WhatsApp Panel</title>
+	<title>{{ $_ENV['SITE_NAME'] }}</title>
 
 	{{-- Google Font: Source Sans Pro --}}
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -51,12 +51,11 @@
 	{{-- Main Sidebar Container --}}
 	<aside class="main-sidebar sidebar-dark-primary elevation-4">
 		{{-- Brand Logo --}}
-		<a href="/" class="brand-link">
-			<i class="fas fa-phone py-2 brand-image"></i>
-			<span class="brand-text font-weight-light"><b>WhatsApp</b>Panel</span>
+		<a href="/" class="brand-link text-center">
+			<span class="brand-text font-weight-light">{!! $_ENV['SITE_NAME_HTML'] !!}</span>
 		</a>
 
-		@include('skeleton/sidebar')
+		@include('admin/skeleton/sidebar')
 	</aside>
 
 	{{-- Content Wrapper. Contains page content --}}
@@ -67,7 +66,7 @@
 				<div class="d-flex justify-content-between align-items-center flex-wrap mb-2">
 					<h1>{{ $lastRoute[0] }}</h1>
 
-					@include('skeleton/breadcrumb')
+					@include('admin/skeleton/breadcrumb')
 				</div>
 			</div>{{-- /.container-fluid --}}
 		</section>
@@ -82,9 +81,9 @@
 
 	<footer class="main-footer">
 		<div class="float-right d-none d-sm-block">
-			<b>Version</b> 1.0
+			<b>Version</b> {{ $_ENV['SITE_VERSION'] }}
 		</div>
-		<strong>WhatsApp Panel</strong>.
+		<strong>{{ $_ENV['SITE_NAME'] }}</strong>.
 	</footer>
 </div>
 {{-- ./wrapper --}}

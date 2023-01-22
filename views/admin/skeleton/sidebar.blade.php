@@ -1,4 +1,4 @@
-@use(App\Sidebar)
+@use(App\AdminSidebar)
 
 {{-- Sidebar --}}
 <div class="sidebar">
@@ -17,7 +17,7 @@
 		<ul class="nav nav-pills nav-sidebar flex-column nav-legacy nav-child-indent" data-widget="treeview" role="menu" data-accordion="false">
 			{{-- Add icons to the links using the .nav-icon class with font-awesome or any other icon font library --}}
 			
-			@foreach ($sidebar as $item)
+			@foreach (AdminSidebar::items() as $item)
 				@if (!is_array($item))
 					<li class="nav-header"><b>{{ $item }}</b></li>
 				@else
@@ -25,7 +25,7 @@
 						@php
 							$isChildren = false;
 							foreach($item[2] as $route) {
-								$isChildren = Sidebar::inRoute($route, $lastRoute[1]);
+								$isChildren = AdminSidebar::inRoute($route, $lastRoute[1]);
 
 								if($isChildren) break;
 							}
@@ -41,7 +41,7 @@
 							<ul class="nav nav-treeview">
 								@foreach ($item[2] as $subitem)								
 									<li class="nav-item">
-										<a href="{{ $subitem[1] }}" class="nav-link {{ Sidebar::inRoute($subitem, $lastRoute[1]) ? 'active' : '' }}">
+										<a href="{{ $subitem[1] }}" class="nav-link {{ AdminSidebar::inRoute($subitem, $lastRoute[1]) ? 'active' : '' }}">
 											<i class="far fa-circle nav-icon"></i>
 											<p>{{ $subitem[0] }}</p>
 										</a>

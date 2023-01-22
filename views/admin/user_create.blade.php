@@ -1,5 +1,5 @@
 @use(\App\RolesDetails)
-@extends('skeleton/index')
+@extends('admin/skeleton/index')
 
 @section('mainContent')
 	<div class="container-fluid">

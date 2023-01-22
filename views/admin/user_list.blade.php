@@ -1,7 +1,8 @@
 @use(\App\RolesDetails)
 @use(\App\Helpers\DateFormat)
 @use(App\Model\User)
-@extends('skeleton/index')
+
+@extends('admin/skeleton/index')
 
 @section('mainContent')
 	<div class="container-fluid">
@@ -65,8 +66,30 @@
 	{{-- SweetAlert2 --}}
 	@css('plugins/sweetalert2-theme-bootstrap-4/bootstrap-4.min.css')
 
-	{{-- Datatables --}}
-	@include('custom/datatables-css')
+	{{-- Customs Styles: Datatables --}}
+	@css('plugins/datatables-bs4/css/dataTables.bootstrap4.min.css')
+	@css('plugins/datatables-responsive/css/responsive.bootstrap4.min.css')
+	@css('plugins/datatables-buttons/css/buttons.bootstrap4.min.css')
+
+	<style>
+		table.dataTable {
+			margin-top: 0 !important;
+			margin-bottom: 0 !important;
+		}
+		.dataTables_info {
+			padding-left: 1em;
+			padding-bottom: 1em;
+		}
+
+		.dataTables_paginate {
+			padding-right: 1em;
+			padding-top: .25em;
+		}
+		div.dt-buttons {
+			padding-bottom: 1em;
+			flex-wrap: nowrap !important;
+		}
+	</style>
 @endsection
 
 @section('additionalScripts')
@@ -96,7 +119,7 @@
 		});
 
 		$('[data-bs-viewUser="delete"]').on('click', function() {
-			let itemId = $(this).attr('data-bs-viewUserId');
+			const itemId = $(this).attr('data-bs-viewUserId');
 
 			Swal.fire({
 				icon: 'question',

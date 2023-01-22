@@ -12,36 +12,32 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AdminUsersController extends Controller
 {
-	public function viewUsers()
+	public function viewUserList()
 	{
 		$userClass = new User($GLOBALS['auth']->getUserId());
-		$sidebar = \App\Sidebar::items($userClass);
 		$routes = [
 			['Inicio', '/'],
 			['Administración', '/admin'],
 			['Lista de usuarios', '/admin/view-users'],
 		];
 
-		return Blade::render('admin_view_users', [
+		return Blade::render('admin/user_list', [
 			'user' => $userClass,
 			'routes' => $routes,
-			'sidebar' => $sidebar,
 		]);
 	}
 
 	public function viewCreateUser()
 	{
 		$userClass = new User($GLOBALS['auth']->getUserId());
-		$sidebar = \App\Sidebar::items($userClass);
 		$routes = [
 			['Inicio', '/'],
 			['Administración', '/admin'],
 			['Crear usuario', '/admin/create-user'],
 		];
-		return Blade::render('admin_create_user', [
+		return Blade::render('admin/user_create', [
 			'user' => $userClass,
 			'routes' => $routes,
-			'sidebar' => $sidebar,
 		]);
 	}
 
@@ -141,7 +137,6 @@ class AdminUsersController extends Controller
 	public function viewEditUser($id)
 	{
 		$userClass = new User($GLOBALS['auth']->getUserId());
-		$sidebar = \App\Sidebar::items($userClass);
 		$routes = [
 			['Inicio', '/'],
 			['Administración', '/admin'],
@@ -159,10 +154,9 @@ class AdminUsersController extends Controller
 			array_push($routes, ['Usuario inexistente', '/admin/edit-user/']);
 		}
 
-		return Blade::render('admin_edit_user', [
+		return Blade::render('admin/user_modify', [
 			'user' => $userClass,
 			'routes' => $routes,
-			'sidebar' => $sidebar,
 			'edit_user' => $editUser,
 		]);
 	}
@@ -246,14 +240,14 @@ class AdminUsersController extends Controller
 		$result = User::canModifyUser($adminId, $userId);
 		if (!$result) {
 			$GLOBALS['flash']->error('No puedes inspeccionar a este usuario');
-			return self::viewUsers($userId);
+			return self::viewUserList($userId);
 		}
 
 		if ($adminId == $userId) {
 			$GLOBALS['flash']->error(
 				'¿Para qué te quieres inspeccionar a ti mismo?',
 			);
-			return self::viewUsers($userId);
+			return self::viewUserList($userId);
 		}
 
 		try {
@@ -263,6 +257,6 @@ class AdminUsersController extends Controller
 		} catch (\Delight\Auth\UnknownIdException $e) {
 			$GLOBALS['flash']->error('Usuario no encontrado');
 		}
-		return self::viewUsers($userId);
+		return self::viewUserList($userId);
 	}
 }

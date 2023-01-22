@@ -58,7 +58,7 @@ try {
 
 	$GLOBALS['auth'] = new Auth($db_connection, null, $_ENV['DB_PREFIX'], null, 0);
 } catch (Exception $e) {
-	echo Blade::render('error/exception', ['e' => $e]);
+	echo Blade::render('exception', ['e' => $e]);
 	exit;
 }
 
@@ -91,6 +91,6 @@ foreach (glob('src/routes/*.php') as $route) {
 
 $router->error(function (Request $request, Response $response, Exception $e) {
 	$response->setStatusCode(Response::HTTP_INTERNAL_SERVER_ERROR);
-	return Blade::render('error/exception', ['e' => $e]);
+	return Blade::render('exception', ['e' => $e]);
 });
 $router->run();

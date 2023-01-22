@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>WhatsApp Panel</title>
+	<title>{!! $_ENV['SITE_NAME'] !!}</title>
 
 	{{-- Google Font: Source Sans Pro --}}
 	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -19,7 +19,7 @@
 	{{-- /.login-logo --}}
 	<div class="card card-outline card-primary">
 		<div class="card-header text-center">
-			<span class="h1"><b>WhatsApp</b>Panel</span>
+			<span class="h1">{!! $_ENV['SITE_NAME_HTML'] !!}</span>
 		</div>
 		<div class="card-body">
 			<p class="login-box-msg">Iniciar sesión en el sistema</p>

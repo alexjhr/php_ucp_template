@@ -3,40 +3,33 @@
 namespace App;
 
 use App\Model\User;
-use \Delight\Auth\Role;
 
-class Sidebar
+class AdminSidebar
 {
 	static $SIDEBAR_ITEMS = array();
 
 	/*
 	* Register title to next items sidebar.
 	*/
-	static function registerTitle($title, $role)
+	static function registerTitle($title)
 	{
-		if (!User::logged()->hasRole($role)) return;
-
-		array_push(Sidebar::$SIDEBAR_ITEMS, $title);
+		array_push(AdminSidebar::$SIDEBAR_ITEMS, $title);
 	}
 
 	/*
 	* Register one item to sidebar.
 	*/
-	static function registerOne($name, $icon, $route, $role)
+	static function registerOne($name, $icon, $route)
 	{
-		if (!User::logged()->hasRole($role)) return;
-
-		array_push(Sidebar::$SIDEBAR_ITEMS, [$name, $icon, $route]);
+		array_push(AdminSidebar::$SIDEBAR_ITEMS, [$name, $icon, $route]);
 	}
 
 	/*
 	* Register section to sidebar.
 	*/
-	static function registerSection($name, $icon, $items, $role)
+	static function registerSection($name, $icon, $items)
 	{
-		if (!User::logged()->hasRole($role)) return;
-
-		array_push(Sidebar::$SIDEBAR_ITEMS, [$name, $icon, $items]);
+		array_push(AdminSidebar::$SIDEBAR_ITEMS, [$name, $icon, $items]);
 	}
 
 	/*
@@ -44,7 +37,7 @@ class Sidebar
 	*/
 	static function items()
 	{
-		return Sidebar::$SIDEBAR_ITEMS;
+		return AdminSidebar::$SIDEBAR_ITEMS;
 	}
 
 	static function inRoute($route, $actual_route)

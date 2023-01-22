@@ -1,5 +1,5 @@
 <?php
-// Controllers/HomeController.php
+// Controllers/SessionController.php
 namespace Controllers;
 
 use Buki\Router\Http\Controller;
@@ -7,25 +7,13 @@ use duncan3dc\Laravel\Blade;
 use App\Helpers\Redirect;
 use App\Model\User;
 
-class HomeController extends Controller
+class SessionController extends Controller
 {
-	public function viewHome()
-	{
-		$userClass = new User($GLOBALS['auth']->getUserId());
-		$sidebar = \App\Sidebar::items();
-		$routes = [['Inicio', '/'], ['Pagina de Inicio', '/']];
-
-		return Blade::render('user_home', [
-			'user' => $userClass,
-			'routes' => $routes,
-			'sidebar' => $sidebar,
-		]);
-	}
-
 	public function viewLogin()
 	{
 		return Blade::render('login');
 	}
+
 	public function postLogin()
 	{
 		$email = $_POST['email'];
@@ -51,6 +39,7 @@ class HomeController extends Controller
 			Redirect::to("/login?email=$email");
 		}
 	}
+
 	public function logout()
 	{
 		$actualUser = $GLOBALS['auth'];
