@@ -85,7 +85,7 @@ class User
 	static function all()
 	{
 		$parsed_users = [];
-		foreach (\MysqliDb::getInstance()->get('panel_users') as $user) {
+		foreach (\MysqliDb::getInstance()->get($_ENV['DB_PREFIX'] . 'users') as $user) {
 			array_push($parsed_users, new self($user));
 		}
 		return $parsed_users;
@@ -94,7 +94,7 @@ class User
 	static function existsByColumnValue($column, $value)
 	{
 		$db = \MysqliDb::getInstance();
-		$exists = $db->where($column, $value)->getOne('panel_users');
+		$exists = $db->where($column, $value)->getOne($_ENV['DB_PREFIX'] . 'users');
 
 		return $exists;
 	}
@@ -102,7 +102,7 @@ class User
 	static function countByRole($role)
 	{
 		$db = \MysqliDb::getInstance();
-		$result = $db->where('roles_mask', $role)->get('panel_users');
+		$result = $db->where('roles_mask', $role)->get($_ENV['DB_PREFIX'] . 'users');
 
 		return $result ? count($result) : 0;
 	}
