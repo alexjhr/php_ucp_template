@@ -479,3 +479,4 @@ node_modules/
 .env
 examples/
 public/uploads
+composer.lock
