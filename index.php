@@ -1,5 +1,6 @@
 <?php
-// Load dependencies
+
+# Load dependencies
 require 'vendor/autoload.php';
 
 use duncan3dc\Laravel\Blade;
@@ -10,7 +11,6 @@ use Tamtamchik\SimpleFlash\TemplateFactory;
 use Tamtamchik\SimpleFlash\Templates;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Delight\Auth\Auth;
 
 function register_all_files($match)
 {
@@ -20,53 +20,49 @@ function register_all_files($match)
 	return null;
 }
 
-// Load environment variables.
+# Config php vars
+ini_set('session.cookie_httponly', 1);
+ini_set('session.auto_start', 0);
+
+# Load environment variables.
 $dotenv = Dotenv\Dotenv::createImmutable('./');
 $dotenv->load();
 
-// Load app dependencies
-register_all_files('src/app/*.php');
+# Load all system files
+require_once './index.files.php';
 
-// Load helpers
-register_all_files('src/helpers/*.php');
-
-// Load all models
-register_all_files('src/models/*.php');
-
-// Config template engine 
+# Start the HTML template engine
 $public = (new Directives())->withCss('/public')->withJs('/public');
-Blade::setInstance(new BladeInstance(
-	__DIR__ . '/views',
-	__DIR__ . '/cache',
-	$public,
-));
+Blade::setInstance(new BladeInstance(__DIR__ . '/views', __DIR__ . '/cache', $public));
 
+# Try connect to databases.
+use App\Auth as AppAuth;
 try {
-	// Connect to database (MySQL)
-	$db_host = $_ENV['DB_HOST'];
-	$db_name = $_ENV['DB_NAME'];
-	$db_user = $_ENV['DB_USER'];
-	$db_password = $_ENV['DB_PASS'];
-	$db_connection = new PDO( // (Auth connection)
-		"mysql:host=$db_host;dbname=$db_name",
-		$db_user,
-		$db_password,
-	);
+	# Load the credentials of the database.
+	$dbHostname = $_ENV['DB_HOST'];
+	$dbName = $_ENV['DB_NAME'];
+	$dbUsername = $_ENV['DB_USER'];
+	$dbPassword = $_ENV['DB_PASS'];
+	$dbPrefix = $_ENV['DB_PREFIX'];
 
-	$db_mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
-	new MysqliDb($db_mysqli); // (App connection)
+	# Connect to database (Auth lib)
+	$pdoConnection = new PDO("mysql:host=$dbHostname;dbname=$dbName", $dbUsername, $dbPassword);
+	AppAuth::createInstance($pdoConnection, $dbPrefix);
 
-	$GLOBALS['auth'] = new Auth($db_connection, null, $_ENV['DB_PREFIX'], null, 0);
+	# Connect to database (MySQLDb lib)
+	$mysqliConnection = new mysqli($dbHostname, $dbUsername, $dbPassword, $dbName);
+	$dbConnection = new MysqliDb($mysqliConnection);
+	$dbConnection->setPrefix($dbPrefix);
 } catch (Exception $e) {
 	echo Blade::render('exception', ['e' => $e]);
-	exit;
+	exit();
 }
 
-// Initialize flash alerts
+# Initialize flash alerts
 $template = TemplateFactory::create(Templates::BOOTSTRAP);
 $GLOBALS['flash'] = new Flash($template);
 
-// Initialize router & load all routes
+# Initialize application routes.
 $router = new \Buki\Router\Router([
 	'paths' => [
 		'controllers' => 'src/controllers',

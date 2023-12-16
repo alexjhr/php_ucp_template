@@ -37,8 +37,8 @@
 										<span class="badge bg-{{ RolesDetails::info[ $role ][1] }}">{{ RolesDetails::info[ $role ][0] }}</span>
 									@endforeach
 								</td>
-								<td>{{ $item->last_login ? DateFormat::humanTiming($item->last_login) : 'Nunca' }}</td>
-								<td>{{ date('Y-m-d H:i:s', $item->created_at) }}</td>
+								<td>{{ $item->lastLogin ? DateFormat::humanTiming($item->lastLogin) : 'Nunca' }}</td>
+								<td>{{ date('Y-m-d H:i:s', $item->createdAt) }}</td>
 								<td>
 									<a href="/admin/edit-user/{{ $item->id }}" role="button" class="btn btn-sm btn-primary">
 										<i class="fas fa-edit"></i>

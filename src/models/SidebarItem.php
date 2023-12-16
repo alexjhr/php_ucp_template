@@ -13,17 +13,17 @@ class SidebarItem
 		$this->priority = $priority;
 	}
 
-	public function addOneLink($name, $icon, $linkTo)
+	public function addOneLink($name, $icon, $linkTo): void
 	{
 		array_push($this->links, [$name, $icon, $linkTo]);
 	}
 
-	public function addTitle($title)
+	public function addTitle($title): void
 	{
 		array_push($this->links, $title);
 	}
 
-	public function addMultipleLinks($name, $icon, $links)
+	public function addMultipleLinks($name, $icon, $links): void
 	{
 		$this->addOneLink($name, $icon, $links);
 	}

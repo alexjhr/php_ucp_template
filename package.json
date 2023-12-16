@@ -3,8 +3,10 @@
 		"phpVersion": "8.2",
 		"useTabs": true,
 		"singleQuote": true,
+		"trailingCommaPHP": false,
 		"printWidth": 100,
 		"parser": "php",
+		"braceStyle": "per-cs",
 		"plugins": ["@prettier/plugin-php"]
 	},
 	"devDependencies": {

@@ -1,18 +1,18 @@
 <?php
-
 namespace App\Model;
 
+use App\Auth;
 use Delight\Auth\Role;
 
 class User
 {
-	public $id;
-	public $username;
-	public $email;
+	public int $id;
+	public string $username;
+	public string $email;
 	public $role;
-	public $created_at;
-	public $last_login;
-	public $exists;
+	public string $createdAt;
+	public string $lastLogin;
+	public bool $exists;
 
 	public function __construct($userData /* User Id or User Data*/)
 	{
@@ -30,47 +30,58 @@ class User
 		$this->username = $userData['username'];
 		$this->email = $userData['email'];
 		$this->role = $userData['roles_mask'];
-		$this->created_at = $userData['registered'];
-		$this->last_login = $userData['last_login'];
+		$this->createdAt = $userData['registered'];
+		$this->lastLogin = $userData['last_login'];
 	}
 
-	static function logged()
+	/**
+	 * Update the basic user information.
+	 * @return void
+	 */
+	public function update(): void
 	{
-		if ($GLOBALS['auth']->isLoggedIn()) {
-			return new self($GLOBALS['auth']->getUserId());
-		}
-		return false;
-	}
-
-	public function update()
-	{
-		$db = \MysqliDb::getInstance();
-
-		$db->where('id', $this->id)->update($_ENV['DB_PREFIX'] . 'users', [
+		$dbConnection = \MysqliDb::getInstance();
+		$dbConnection->where('id', $this->id)->update('users', [
 			'username' => $this->username,
 			'email' => $this->email,
 			'roles_mask' => $this->role,
 		]);
 	}
 
+	/**
+	 * Get the roles that the user has.
+	 * @return Array All user roles.
+	 */
 	public function roles()
 	{
-		return $GLOBALS['auth']->admin()->getRolesForUserById($this->id);
+		$adminInterface = Auth::instance()->admin();
+		return $adminInterface->getRolesForUserById($this->id);
 	}
 
-	public function hasRole($role)
+	/**
+	 * Verify if a user has a role.
+	 * @param int $role The role as one of the constants from the auth consts.
+	 * @return bool If you have the role.
+	 */
+	public function hasRole($role): bool
 	{
-		if ($role !== Role::ADMIN) {
-			// If this user is admin, have all roles
-			if ($this->hasRole(Role::ADMIN)) return true;
+		# If the user has admin role, he will have access to everything.
+		if ($role !== Role::ADMIN && $this->hasRole(Role::ADMIN)) {
+			return true;
 		}
-		return $GLOBALS['auth']->admin()->doesUserHaveRole($this->id, $role);
+		$adminInterface = Auth::instance()->admin();
+		return $adminInterface->doesUserHaveRole($this->id, $role);
 	}
 
-	public function updatePassword($newPassword)
+	/**
+	 * Update the user password.
+	 * @param string $newPassword The new password for the user account.
+	 * @return bool If the password change was made.
+	 */
+	public function updatePassword(string $newPassword): bool
 	{
 		try {
-			$adminInterface = $GLOBALS['auth']->admin();
+			$adminInterface = Auth::instance()->admin();
 			$adminInterface->changePasswordForUserById($this->id, $newPassword);
 
 			return true;
@@ -82,49 +93,63 @@ class User
 		return false;
 	}
 
-	static function all()
+	/**
+	 * Obtain all registered users.
+	 * @return User[]
+	 */
+	static function all(): array
 	{
 		$parsedUsers = [];
-		foreach (
-			\MysqliDb::getInstance()->get($_ENV['DB_PREFIX'] . 'users')
-			as $user
-		) {
+		foreach (\MysqliDb::getInstance()->get('users') as $user) {
 			array_push($parsedUsers, new self($user));
 		}
 		return $parsedUsers;
 	}
 
-	static function existsByColumnValue($column, $value)
+	/**
+	 * Verify if there is a user depending on a specific value.
+	 * @param string $column The column to verify.
+	 * @param string $value The value that the column must have.
+	 * @return array|null If there is return array, if not null.
+	 */
+	static function existsByColumnValue(string $column, string $value)
 	{
-		$db = \MysqliDb::getInstance();
-		$exists = $db
-			->where($column, $value)
-			->getOne($_ENV['DB_PREFIX'] . 'users');
+		$dbConnection = \MysqliDb::getInstance();
+		$exists = $dbConnection->where($column, $value)->getOne('users');
 
 		return $exists;
 	}
 
-	static function countByRole($role)
+	/**
+	 * Count users who have certain specific roles.
+	 * @param int $role The role to look for among users.
+	 * @return int The number of users.
+	 */
+	static function countByRole(int $role): int
 	{
-		$db = \MysqliDb::getInstance();
-		$result = $db
-			->where('roles_mask', $role)
-			->get($_ENV['DB_PREFIX'] . 'users');
+		$dbConnection = \MysqliDb::getInstance();
+		$count = $dbConnection->where('roles_mask', $role)->get('users');
 
-		return $result ? count($result) : 0;
+		return $count ? count($count) : 0;
 	}
 
-	static function canModifyUser($userId, $toUserId)
+	/**
+	 * Can one user modify data from the other?
+	 * @param int $userId The modifier user.
+	 * @param int $toUserId The user that will be modified.
+	 * @param bool If the user has permission to modify it.
+	 */
+	static function canModifyUser(int $userId, int $toUserId): bool
 	{
 		$toUser = new self($toUserId);
 
 		if ($toUser) {
-			// This admin can delete this user?
+			# This admin can delete this user?
 			$adminUser = new self($userId);
 
 			if ($userId !== $toUserId) {
 				if ($toUser->role == \Delight\Auth\Role::ADMIN) {
-					if ($adminUser->created_at > $toUser->created_at) {
+					if ($adminUser->createdAt > $toUser->createdAt) {
 						return false;
 					}
 				}
