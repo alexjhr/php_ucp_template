@@ -1,4 +1,5 @@
 @use(\App\RolesDetails)
+@use(\App\Auth)
 @use(\Tamtamchik\SimpleFlash\Flash)
 @extends('admin/skeleton/index')
 
@@ -39,7 +40,7 @@
 									@foreach(RolesDetails::availableRoles() as $role)
 										@php
 											$roleValue = RolesDetails::getRoleByName($role);
-											$selected = $GLOBALS['auth']->admin()->doesUserHaveRole($edit_user->id, $roleValue);
+											$selected = Auth::instance()->admin()->doesUserHaveRole($edit_user->id, $roleValue);
 										@endphp
 
 										<option value="{{ $role }}" {{ $selected ? 'selected' : '' }}>{{ RolesDetails::info[ $role][0] }}</option>
