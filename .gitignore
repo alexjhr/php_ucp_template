@@ -480,3 +480,4 @@ node_modules/
 examples/
 public/uploads
 composer.lock
+pnpm-lock.yaml
