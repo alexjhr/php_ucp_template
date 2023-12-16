@@ -46,7 +46,7 @@ class User
 	{
 		$db = \MysqliDb::getInstance();
 
-		$db->where('id', $this->id)->update('panel_users', [
+		$db->where('id', $this->id)->update($_ENV['DB_PREFIX'] . 'users', [
 			'username' => $this->username,
 			'email' => $this->email,
 			'roles_mask' => $this->role,
@@ -84,17 +84,22 @@ class User
 
 	static function all()
 	{
-		$parsed_users = [];
-		foreach (\MysqliDb::getInstance()->get($_ENV['DB_PREFIX'] . 'users') as $user) {
-			array_push($parsed_users, new self($user));
+		$parsedUsers = [];
+		foreach (
+			\MysqliDb::getInstance()->get($_ENV['DB_PREFIX'] . 'users')
+			as $user
+		) {
+			array_push($parsedUsers, new self($user));
 		}
-		return $parsed_users;
+		return $parsedUsers;
 	}
 
 	static function existsByColumnValue($column, $value)
 	{
 		$db = \MysqliDb::getInstance();
-		$exists = $db->where($column, $value)->getOne($_ENV['DB_PREFIX'] . 'users');
+		$exists = $db
+			->where($column, $value)
+			->getOne($_ENV['DB_PREFIX'] . 'users');
 
 		return $exists;
 	}
@@ -102,7 +107,9 @@ class User
 	static function countByRole($role)
 	{
 		$db = \MysqliDb::getInstance();
-		$result = $db->where('roles_mask', $role)->get($_ENV['DB_PREFIX'] . 'users');
+		$result = $db
+			->where('roles_mask', $role)
+			->get($_ENV['DB_PREFIX'] . 'users');
 
 		return $result ? count($result) : 0;
 	}
