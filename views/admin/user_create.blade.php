@@ -1,4 +1,5 @@
 @use(\App\RolesDetails)
+@use(\Tamtamchik\SimpleFlash\Flash)
 @extends('admin/skeleton/index')
 
 @section('mainContent')
@@ -13,7 +14,7 @@
 			<form class="form-horizontal" method="POST" action="#">
 				<div class="card-body">
 					{{-- Alerts --}}
-					{!! $GLOBALS['flash']->display() !!}
+					{!! Flash::display() !!}
 
 					<div class="form-group row">
 						<label for="email" class="col-sm-2 col-form-label">Correo electrónico</label>

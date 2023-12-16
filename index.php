@@ -58,20 +58,20 @@ try {
 	exit();
 }
 
-# Initialize flash alerts
-$template = TemplateFactory::create(Templates::BOOTSTRAP);
-$GLOBALS['flash'] = new Flash($template);
+# Initialize notification alerts
+$notificationTemplate = TemplateFactory::create(Templates::BOOTSTRAP);
+Flash::setTemplate($notificationTemplate);
 
 # Initialize application routes.
 $router = new \Buki\Router\Router([
 	'paths' => [
 		'controllers' => 'src/controllers',
-		'middlewares' => 'src/middlewares',
+		'middlewares' => 'src/middlewares'
 	],
 	'namespaces' => [
 		'controllers' => 'Controllers',
-		'middlewares' => 'Middlewares',
-	],
+		'middlewares' => 'Middlewares'
+	]
 ]);
 foreach (glob('src/routes/*.php') as $route) {
 	require $route;

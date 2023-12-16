@@ -3,6 +3,7 @@ namespace App\Model;
 
 use App\Auth;
 use Delight\Auth\Role;
+use Tamtamchik\SimpleFlash\Flash;
 
 class User
 {
@@ -44,7 +45,7 @@ class User
 		$dbConnection->where('id', $this->id)->update('users', [
 			'username' => $this->username,
 			'email' => $this->email,
-			'roles_mask' => $this->role,
+			'roles_mask' => $this->role
 		]);
 	}
 
@@ -86,9 +87,9 @@ class User
 
 			return true;
 		} catch (\Delight\Auth\UnknownIdException $e) {
-			$GLOBALS['flash']->error('El usuario no es válido');
+			Flash::error('El usuario no es válido');
 		} catch (\Delight\Auth\InvalidPasswordException $e) {
-			$GLOBALS['flash']->error('La contraseña no es válida');
+			Flash::error('La contraseña no es válida');
 		}
 		return false;
 	}

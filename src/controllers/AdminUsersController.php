@@ -9,6 +9,7 @@ use duncan3dc\Laravel\Blade;
 use App\Model\User;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Tamtamchik\SimpleFlash\Flash;
 
 class AdminUsersController extends Controller
 {
@@ -49,7 +50,7 @@ class AdminUsersController extends Controller
 
 			# The username is required.
 			if (!$userName) {
-				$GLOBALS['flash']->error('El nombre de usuario proporcionado no es válido');
+				Flash::error('El nombre de usuario proporcionado no es válido');
 				return self::viewCreateUser();
 			}
 
@@ -64,15 +65,15 @@ class AdminUsersController extends Controller
 			# Asign role to created user.
 			$adminInterface->addRoleForUserById($createdId, RolesDetails::getRoleByName($userRole));
 
-			$GLOBALS['flash']->success("El usuario \"$userName\" ha sido creado correctamente");
+			Flash::success("El usuario \"$userName\" ha sido creado correctamente");
 		} catch (\Delight\Auth\InvalidEmailException $e) {
-			$GLOBALS['flash']->error('El correo electrónico proporcionado no es válido');
+			Flash::error('El correo electrónico proporcionado no es válido');
 		} catch (\Delight\Auth\InvalidPasswordException $e) {
-			$GLOBALS['flash']->error('La contraseña proporcionado no es válida');
+			Flash::error('La contraseña proporcionado no es válida');
 		} catch (\Delight\Auth\UserAlreadyExistsException $e) {
-			$GLOBALS['flash']->error('El correo electrónico proporcionado ya existe');
+			Flash::error('El correo electrónico proporcionado ya existe');
 		} catch (\Delight\Auth\DuplicateUsernameException $e) {
-			$GLOBALS['flash']->error('El nombre de usuario proporcionado ya existe');
+			Flash::error('El nombre de usuario proporcionado ya existe');
 		}
 		return self::viewCreateUser();
 	}
@@ -127,7 +128,7 @@ class AdminUsersController extends Controller
 		if ($editUser->exists) {
 			array_push($routes, [$editUser->username, '/admin/edit-user/' . $id]);
 		} else {
-			$GLOBALS['flash']->error('El usuario no existe');
+			Flash::error('El usuario no existe');
 			array_push($routes, ['Usuario inexistente', '/admin/edit-user/']);
 		}
 
@@ -144,7 +145,7 @@ class AdminUsersController extends Controller
 		$adminId = Auth::getUserId();
 
 		if (!User::canModifyUser($adminId, $userId)) {
-			$GLOBALS['flash']->error('No puedes modificar este usuario');
+			Flash::error('No puedes modificar este usuario');
 			return self::viewEditUser($userId);
 		}
 
@@ -163,7 +164,7 @@ class AdminUsersController extends Controller
 				# Change username.
 				if ($userName != $userSelected->username) {
 					if (User::existsByColumnValue('username', $userName)) {
-						$GLOBALS['flash']->error('El nombre de usuario ya esta en uso');
+						Flash::error('El nombre de usuario ya esta en uso');
 						return self::viewEditUser($userId);
 					} else {
 						$userSelected->username = $userName;
@@ -173,7 +174,7 @@ class AdminUsersController extends Controller
 				# Change email
 				if ($userEmail != $userSelected->email) {
 					if (User::existsByColumnValue('email', $userEmail)) {
-						$GLOBALS['flash']->error('El correo electrónico ya esta en uso');
+						Flash::error('El correo electrónico ya esta en uso');
 						return self::viewEditUser($userId);
 					} else {
 						$userSelected->email = $userEmail;
@@ -192,9 +193,9 @@ class AdminUsersController extends Controller
 				}
 				$userSelected->update();
 
-				$GLOBALS['flash']->success('Usuario editado correctamente');
+				Flash::success('Usuario editado correctamente');
 			} else {
-				$GLOBALS['flash']->error('Usuario no existente');
+				Flash::error('Usuario no existente');
 			}
 		}
 

@@ -1,3 +1,5 @@
+@use(\Tamtamchik\SimpleFlash\Flash)
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,7 +26,7 @@
 		<div class="card-body">
 			<p class="login-box-msg">Iniciar sesión en el sistema</p>
 
-			{!! $GLOBALS['flash']->display() !!}
+			{!! Flash::display() !!}
 
 			<form action="#" method="POST">
 				<div class="input-group mb-3">

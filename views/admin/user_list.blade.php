@@ -1,13 +1,14 @@
 @use(\App\RolesDetails)
 @use(\App\Helpers\DateFormat)
 @use(App\Model\User)
+@use(\Tamtamchik\SimpleFlash\Flash)
 
 @extends('admin/skeleton/index')
 
 @section('mainContent')
 	<div class="container-fluid">
 		{{-- Alerts --}}
-		{!! $GLOBALS['flash']->display() !!}
+		{!! Flash::display() !!}
 
 		<div class="card card-primary">
 			<div class="card-header">
