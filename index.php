@@ -81,7 +81,6 @@ foreach (glob('src/routes/*.php') as $route) {
 	require $route;
 
 	$functionName = @array_pop(explode('/', $route));
-	$functionName = @array_pop(explode('_', $route));
 	$functionName = str_replace('.php', '', $functionName);
 	$functionName = strtolower($functionName);
 	$functionName .= '_app_router';

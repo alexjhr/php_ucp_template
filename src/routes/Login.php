@@ -1,12 +1,5 @@
 <?php
 
-/*
-*   Register a function to export routes.
-*   -
-*   -
-*   function name = lowercase name file + app router
-*/
-
 function login_app_router($router)
 {
 	$router->get('/login', 'SessionController@viewLogin', ['before' => 'NotLoggedMiddleware']);
